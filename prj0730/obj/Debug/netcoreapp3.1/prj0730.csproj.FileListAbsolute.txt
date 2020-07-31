@@ -1,0 +1,13 @@
+C:\Users\SKCC\hoho\prj0730\bin\Debug\netcoreapp3.1\prj0730.exe
+C:\Users\SKCC\hoho\prj0730\bin\Debug\netcoreapp3.1\prj0730.deps.json
+C:\Users\SKCC\hoho\prj0730\bin\Debug\netcoreapp3.1\prj0730.runtimeconfig.json
+C:\Users\SKCC\hoho\prj0730\bin\Debug\netcoreapp3.1\prj0730.runtimeconfig.dev.json
+C:\Users\SKCC\hoho\prj0730\bin\Debug\netcoreapp3.1\prj0730.dll
+C:\Users\SKCC\hoho\prj0730\bin\Debug\netcoreapp3.1\prj0730.pdb
+C:\Users\SKCC\hoho\prj0730\obj\Debug\netcoreapp3.1\prj0730.csprojAssemblyReference.cache
+C:\Users\SKCC\hoho\prj0730\obj\Debug\netcoreapp3.1\prj0730.AssemblyInfoInputs.cache
+C:\Users\SKCC\hoho\prj0730\obj\Debug\netcoreapp3.1\prj0730.AssemblyInfo.cs
+C:\Users\SKCC\hoho\prj0730\obj\Debug\netcoreapp3.1\prj0730.csproj.CoreCompileInputs.cache
+C:\Users\SKCC\hoho\prj0730\obj\Debug\netcoreapp3.1\prj0730.dll
+C:\Users\SKCC\hoho\prj0730\obj\Debug\netcoreapp3.1\prj0730.pdb
+C:\Users\SKCC\hoho\prj0730\obj\Debug\netcoreapp3.1\prj0730.genruntimeconfig.cache

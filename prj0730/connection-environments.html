@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>접속환경 관리</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --line: #d8dee9;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --danger: #dc2626;
+      --success: #16a34a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, "Noto Sans KR", sans-serif;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: white;
+      padding: 32px 20px;
+    }
+
+    header .wrap,
+    main {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+
+    header p {
+      margin: 0;
+      opacity: 0.9;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 20px;
+      padding: 24px 0 40px;
+    }
+
+    section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+      padding: 20px;
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      color: #374151;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--text);
+      font: inherit;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .actions,
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .secondary {
+      background: #eef2ff;
+      color: #1e40af;
+    }
+
+    .danger {
+      background: #fee2e2;
+      color: var(--danger);
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      margin: 10px 0 0;
+    }
+
+    .search {
+      margin: 0 0 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 12px 10px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      color: #4b5563;
+      background: #f9fafb;
+    }
+
+    tr:hover td {
+      background: #f8fbff;
+    }
+
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: #e0f2fe;
+      color: #0369a1;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .active-badge {
+      background: #dcfce7;
+      color: var(--success);
+    }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 28px 0;
+    }
+
+    .copy {
+      word-break: break-all;
+      color: #374151;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 13px;
+    }
+
+    @media (max-width: 880px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>접속환경 관리</h1>
+      <p>개발, 테스트, 운영 등 접속 정보를 브라우저 로컬 저장소에 저장하고 관리합니다.</p>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2 id="formTitle">환경 추가</h2>
+      <form id="environmentForm">
+        <input id="environmentId" type="hidden">
+
+        <label for="name">환경 이름 *</label>
+        <input id="name" required placeholder="예: 개발 DB">
+
+        <div class="row">
+          <div>
+            <label for="type">유형</label>
+            <select id="type">
+              <option>Database</option>
+              <option>API</option>
+              <option>Server</option>
+              <option>Queue</option>
+              <option>Storage</option>
+              <option>Etc</option>
+            </select>
+          </div>
+          <div>
+            <label for="protocol">프로토콜</label>
+            <input id="protocol" placeholder="예: https, tcp, mssql">
+          </div>
+        </div>
+
+        <label for="host">호스트 / 주소 *</label>
+        <input id="host" required placeholder="예: localhost 또는 api.example.com">
+
+        <div class="row">
+          <div>
+            <label for="port">포트</label>
+            <input id="port" inputmode="numeric" placeholder="예: 443">
+          </div>
+          <div>
+            <label for="database">DB / 경로</label>
+            <input id="database" placeholder="예: app_db 또는 /v1">
+          </div>
+        </div>
+
+        <label for="username">사용자</label>
+        <input id="username" autocomplete="off" placeholder="예: app_user">
+
+        <label for="notes">메모</label>
+        <textarea id="notes" placeholder="주의사항, VPN 필요 여부 등을 적어두세요."></textarea>
+
+        <label>
+          <input id="isActive" type="checkbox" style="width:auto; margin-right:6px;">
+          현재 사용 중인 환경으로 표시
+        </label>
+
+        <div class="actions">
+          <button class="primary" type="submit">저장</button>
+          <button class="secondary" type="button" id="resetButton">새로 입력</button>
+        </div>
+      </form>
+      <p class="hint">비밀번호나 API 키 같은 민감 정보는 저장하지 않는 것을 권장합니다. 데이터는 현재 브라우저에만 저장됩니다.</p>
+    </section>
+
+    <section>
+      <h2>환경 목록</h2>
+      <input class="search" id="search" placeholder="이름, 유형, 호스트, 메모로 검색">
+
+      <div class="toolbar">
+        <button class="secondary" id="exportButton" type="button">JSON 내보내기</button>
+        <button class="secondary" id="importButton" type="button">JSON 가져오기</button>
+        <input id="importFile" type="file" accept="application/json" hidden>
+        <button class="danger" id="clearButton" type="button">전체 삭제</button>
+      </div>
+
+      <div id="list"></div>
+    </section>
+  </main>
+
+  <script>
+    const storageKey = "connection-environments";
+    const form = document.getElementById("environmentForm");
+    const list = document.getElementById("list");
+    const search = document.getElementById("search");
+    const fields = ["environmentId", "name", "type", "protocol", "host", "port", "database", "username", "notes"];
+
+    function loadEnvironments() {
+      try {
+        return JSON.parse(localStorage.getItem(storageKey)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveEnvironments(environments) {
+      localStorage.setItem(storageKey, JSON.stringify(environments));
+      render();
+    }
+
+    function createId() {
+      if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        return window.crypto.randomUUID();
+      }
+      return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    function getFormData() {
+      return {
+        id: document.getElementById("environmentId").value || createId(),
+        name: document.getElementById("name").value.trim(),
+        type: document.getElementById("type").value,
+        protocol: document.getElementById("protocol").value.trim(),
+        host: document.getElementById("host").value.trim(),
+        port: document.getElementById("port").value.trim(),
+        database: document.getElementById("database").value.trim(),
+        username: document.getElementById("username").value.trim(),
+        notes: document.getElementById("notes").value.trim(),
+        isActive: document.getElementById("isActive").checked,
+        updatedAt: new Date().toISOString()
+      };
+    }
+
+    function setFormData(environment) {
+      document.getElementById("environmentId").value = environment.id;
+      document.getElementById("name").value = environment.name || "";
+      document.getElementById("type").value = environment.type || "Database";
+      document.getElementById("protocol").value = environment.protocol || "";
+      document.getElementById("host").value = environment.host || "";
+      document.getElementById("port").value = environment.port || "";
+      document.getElementById("database").value = environment.database || "";
+      document.getElementById("username").value = environment.username || "";
+      document.getElementById("notes").value = environment.notes || "";
+      document.getElementById("isActive").checked = Boolean(environment.isActive);
+      document.getElementById("formTitle").textContent = "환경 수정";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function resetForm() {
+      form.reset();
+      document.getElementById("environmentId").value = "";
+      document.getElementById("formTitle").textContent = "환경 추가";
+    }
+
+    function buildAddress(environment) {
+      const protocol = environment.protocol ? `${environment.protocol}://` : "";
+      const port = environment.port ? `:${environment.port}` : "";
+      const path = environment.database ? `/${environment.database.replace(/^\/+/, "")}` : "";
+      return `${protocol}${environment.host}${port}${path}`;
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function render() {
+      const keyword = search.value.trim().toLowerCase();
+      const environments = loadEnvironments()
+        .filter((environment) => {
+          const target = [
+            environment.name,
+            environment.type,
+            environment.protocol,
+            environment.host,
+            environment.port,
+            environment.database,
+            environment.username,
+            environment.notes
+          ].join(" ").toLowerCase();
+          return target.includes(keyword);
+        })
+        .sort((a, b) => Number(Boolean(b.isActive)) - Number(Boolean(a.isActive)) || a.name.localeCompare(b.name));
+
+      if (environments.length === 0) {
+        list.innerHTML = '<div class="empty">등록된 접속환경이 없습니다.</div>';
+        return;
+      }
+
+      list.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>환경</th>
+              <th>접속 주소</th>
+              <th>사용자 / 메모</th>
+              <th>관리</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${environments.map((environment) => `
+              <tr>
+                <td>
+                  <strong>${escapeHtml(environment.name)}</strong><br>
+                  <span class="badge">${escapeHtml(environment.type)}</span>
+                  ${environment.isActive ? '<span class="badge active-badge">사용 중</span>' : ''}
+                </td>
+                <td class="copy">${escapeHtml(buildAddress(environment))}</td>
+                <td>
+                  ${environment.username ? `사용자: ${escapeHtml(environment.username)}<br>` : ""}
+                  ${environment.notes ? escapeHtml(environment.notes) : '<span class="hint">메모 없음</span>'}
+                </td>
+                <td>
+                  <button class="secondary" type="button" data-action="edit" data-id="${escapeHtml(environment.id)}">수정</button>
+                  <button class="danger" type="button" data-action="delete" data-id="${escapeHtml(environment.id)}">삭제</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function editEnvironment(id) {
+      const environment = loadEnvironments().find((item) => item.id === id);
+      if (environment) {
+        setFormData(environment);
+      }
+    }
+
+    function deleteEnvironment(id) {
+      if (!confirm("선택한 접속환경을 삭제할까요?")) {
+        return;
+      }
+      saveEnvironments(loadEnvironments().filter((environment) => environment.id !== id));
+      resetForm();
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const data = getFormData();
+      const environments = loadEnvironments();
+      const index = environments.findIndex((environment) => environment.id === data.id);
+
+      if (data.isActive) {
+        environments.forEach((environment) => {
+          environment.isActive = false;
+        });
+      }
+
+      if (index >= 0) {
+        environments[index] = data;
+      } else {
+        environments.push(data);
+      }
+
+      saveEnvironments(environments);
+      resetForm();
+    });
+
+    document.getElementById("resetButton").addEventListener("click", resetForm);
+    search.addEventListener("input", render);
+
+    list.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) {
+        return;
+      }
+
+      if (button.dataset.action === "edit") {
+        editEnvironment(button.dataset.id);
+      }
+      if (button.dataset.action === "delete") {
+        deleteEnvironment(button.dataset.id);
+      }
+    });
+
+    document.getElementById("clearButton").addEventListener("click", () => {
+      if (confirm("저장된 모든 접속환경을 삭제할까요?")) {
+        saveEnvironments([]);
+        resetForm();
+      }
+    });
+
+    document.getElementById("exportButton").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(loadEnvironments(), null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "connection-environments.json";
+      link.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("importButton").addEventListener("click", () => {
+      document.getElementById("importFile").click();
+    });
+
+    document.getElementById("importFile").addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (!file) {
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const imported = JSON.parse(reader.result);
+          if (!Array.isArray(imported)) {
+            throw new Error("Invalid format");
+          }
+          saveEnvironments(imported);
+          resetForm();
+        } catch {
+          alert("가져올 수 없는 JSON 파일입니다.");
+        } finally {
+          event.target.value = "";
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    fields.forEach((field) => {
+      document.getElementById(field).addEventListener("input", () => {
+        if (!document.getElementById("environmentId").value) {
+          document.getElementById("formTitle").textContent = "환경 추가";
+        }
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>

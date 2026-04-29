@@ -6,4 +6,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.EventHubs" Version="4.2.0"/>
   </ItemGroup>
+  <ItemGroup>
+    <None Update="connection-environments.html" CopyToOutputDirectory="PreserveNewest"/>
+  </ItemGroup>
 </Project>
